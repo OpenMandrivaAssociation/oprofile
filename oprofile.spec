@@ -1,7 +1,6 @@
-
 %define name	oprofile
-%define version	0.9.2
-%define rel	5
+%define version	0.9.3
+%define rel	1
 
 Summary:	Transparent low-overhead system-wide profiler
 Name:		%name
@@ -68,13 +67,6 @@ install -d -m755 %{buildroot}%{_sbindir}
 mv %{buildroot}%{_bindir}/oprof_start %{buildroot}%{_sbindir}/oprof_start
 ln -s consolehelper %{buildroot}%{_bindir}/oprof_start
 
-install -d -m755 %{buildroot}%{_menudir}
-cat > %{buildroot}%{_menudir}/%{name}-gui <<EOF
-?package(%{name}-gui):command="%{_bindir}/oprof_start" \
-icon="%{name}.png" needs="X11" section="More Applications/Development/Tools" \
-title="OProfile starter" longtitle="Start OProfile profiler" xdg="true"
-EOF
-
 install -d -m755 %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop <<EOF
 [Desktop Entry]
@@ -84,13 +76,13 @@ Exec=%{_bindir}/oprof_start
 Icon=%{name}
 Terminal=false
 Type=Application
-Categories=X-MandrivaLinux-MoreApplications-Development-Tools;Development;Profiling;Qt;
+Categories=Development;Profiling;Qt;
 Encoding=UTF-8
 EOF
 
-install -m644 %{SOURCE11} -D %{buildroot}%{_miconsdir}/%{name}.png
-install -m644 %{SOURCE12} -D %{buildroot}%{_iconsdir}/%{name}.png
-install -m644 %{SOURCE13} -D %{buildroot}%{_liconsdir}/%{name}.png
+install -m644 %{SOURCE11} -D %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
+install -m644 %{SOURCE12} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
 
 %clean
 rm -rf %{buildroot}
@@ -120,10 +112,5 @@ rm -rf %{buildroot}
 %doc COPYING
 %{_bindir}/oprof_start
 %{_sbindir}/oprof_start
-%{_menudir}/%{name}-gui
 %{_datadir}/applications/mandriva-*.desktop
-%{_miconsdir}/%{name}.png
-%{_iconsdir}/%{name}.png
-%{_liconsdir}/%{name}.png
-
-
+%{_iconsdir}/hicolor/*/apps/%{name}.png
