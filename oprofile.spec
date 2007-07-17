@@ -1,6 +1,6 @@
 %define name	oprofile
 %define version	0.9.3
-%define rel	1
+%define rel	2
 
 Summary:	Transparent low-overhead system-wide profiler
 Name:		%name
@@ -82,7 +82,7 @@ EOF
 
 install -m644 %{SOURCE11} -D %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
 install -m644 %{SOURCE12} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
-install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
+install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
 
 %clean
 rm -rf %{buildroot}
