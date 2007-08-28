@@ -77,7 +77,6 @@ Icon=%{name}
 Terminal=false
 Type=Application
 Categories=Development;Profiling;Qt;
-Encoding=UTF-8
 EOF
 
 install -m644 %{SOURCE11} -D %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
