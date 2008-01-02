@@ -13,6 +13,7 @@ Source:		http://prdownloads.sourceforge.net/%name/%name-%version.tar.bz2
 Source11:	%name-16.png
 Source12:	%name-32.png
 Source13:	%name-48.png
+BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	binutils-devel qt3-devel libpopt-devel gettext-devel
 
 %description
