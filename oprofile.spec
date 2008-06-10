@@ -1,6 +1,6 @@
 %define name	oprofile
 %define version	0.9.3
-%define rel	5
+%define rel	6
 
 Summary:	Transparent low-overhead system-wide profiler
 Name:		%name
@@ -13,6 +13,7 @@ Source:		http://prdownloads.sourceforge.net/%name/%name-%version.tar.bz2
 Source11:	%name-16.png
 Source12:	%name-32.png
 Source13:	%name-48.png
+Patch0:		oprofile-0.9.3-fix-build.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	binutils-devel qt3-devel libpopt-devel gettext-devel
 
@@ -47,6 +48,7 @@ profiler.
 
 %prep
 %setup -q
+%patch0 -p0
 
 %build
 export QTDIR=%{_prefix}/lib/qt3
