@@ -88,11 +88,15 @@ install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}
 %clean
 rm -rf %{buildroot}
 
+%if %mdkversion < 200900
 %post gui
 %{update_menus}
+%endif
 
+%if %mdkversion < 200900
 %postun gui
 %{clean_menus}
+%endif
 
 %files
 %defattr(-,root,root)
