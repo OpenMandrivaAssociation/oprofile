@@ -53,16 +53,13 @@ profiler.
 %build
 export QTDIR=%{qt3dir}
 export QTLIB=%{qt3lib}
-%configure2_5x --with-kernel-support --with-qt-libraries=$QTLIB
+%configure2_5x --with-kernel-support --with-qt-libraries=%{qt3lib}
 %make
 
 %install
 rm -rf %{buildroot}
 %makeinstall_std
 rm -f %{buildroot}%{_datadir}/doc/%{name}/*.html
-
-# bug in makefile
-mv %{buildroot}%{_datadir}/stl.pat %{buildroot}%{_datadir}/%{name}
 
 # root dialog
 install -d -m755 %{buildroot}%{_sbindir}
