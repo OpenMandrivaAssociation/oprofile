@@ -1,6 +1,6 @@
 %define name	oprofile
 %define version	0.9.3
-%define rel	6
+%define rel	7
 
 Summary:	Transparent low-overhead system-wide profiler
 Name:		%name
@@ -51,14 +51,14 @@ profiler.
 %patch0 -p0
 
 %build
-export QTDIR=%{_prefix}/lib/qt3
-export QTLIB=$QTDIR/%{_lib}
+export QTDIR=%{qt3dir}
+export QTLIB=%{qt3lib}
 %configure2_5x --with-kernel-support --with-qt-libraries=$QTLIB
 %make
 
 %install
 rm -rf %{buildroot}
-%makeinstall
+%makeinstall_std
 rm -f %{buildroot}%{_datadir}/doc/%{name}/*.html
 
 # bug in makefile
