@@ -1,6 +1,6 @@
 %define name	oprofile
-%define version	0.9.3
-%define rel	8
+%define version	0.9.4
+%define rel	1
 
 Summary:	Transparent low-overhead system-wide profiler
 Name:		%name
@@ -9,13 +9,19 @@ Release:	%mkrel %rel
 Group:		Development/Other
 License:	GPL
 URL:		http://oprofile.sourceforge.net/
-Source:		http://prdownloads.sourceforge.net/%name/%name-%version.tar.bz2
+Source:		http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
+# upstream cvs, fixes build
+Patch0:		oprofile-mode-argument.patch
+# fedora, fixes build
+Patch1:		oprofile-basename.patch
+# Use -module -avoid-version for agents:
+Patch2:		oprofile-agents-ldflags.patch
 Source11:	%name-16.png
 Source12:	%name-32.png
 Source13:	%name-48.png
-Patch0:		oprofile-0.9.3-fix-build.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	binutils-devel qt3-devel libpopt-devel gettext-devel
+BuildRequires:	java-rpmbuild
 
 %description
 OProfile is a system-wide profiler for Linux systems, capable of
@@ -46,14 +52,39 @@ under the GNU GPL.
 This package provides a convenient QT GUI for starting the
 profiler.
 
+%package	jit
+Summary:	Libraries for profiling Java and other JIT compiled code
+Group:		Development/Other
+
+%description	jit
+Libraries needed for profiling Java and other JIT compiled code.
+For profiling Java code, you need to load
+%{_libdir}/oprofile/libjvmti_oprofile.so
+into the JVM as per the OProfile documentation.
+
+%package	devel
+Summary:	Development files for developing OProfile JIT agents
+Group:		Development/Other
+Requires:	%{name}-jit = %{version}
+
+%description	devel
+Header and development library symlink for libopagent, required for
+compiling additional OProfile JIT agents.
+
 %prep
 %setup -q
 %patch0 -p0
+%patch1 -p1
+%patch2 -p1
 
 %build
 export QTDIR=%{qt3dir}
 export QTLIB=%{qt3lib}
-%configure2_5x --with-kernel-support --with-qt-libraries=%{qt3lib}
+# fixes build
+touch NEWS AUTHORS # strange, autoreconf does not create these
+autoreconf -if
+%configure2_5x --with-kernel-support --with-qt-libraries=%{qt3lib} \
+	--with-java=%{java_home}
 %make
 
 %install
@@ -82,6 +113,8 @@ install -m644 %{SOURCE11} -D %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}
 install -m644 %{SOURCE12} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
 install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
 
+rm %{buildroot}%{_libdir}/oprofile/*a
+
 %clean
 rm -rf %{buildroot}
 
@@ -95,6 +128,12 @@ rm -rf %{buildroot}
 %{clean_menus}
 %endif
 
+%pre jit
+%_pre_useradd oprofile "%{_var}/lib/oprofile" /bin/nologin
+
+%postun jit
+%_postun_userdel oprofile
+
 %files
 %defattr(-,root,root)
 %doc README TODO COPYING ChangeLog* doc/*.html
@@ -106,6 +145,7 @@ rm -rf %{buildroot}
 %{_bindir}/opreport
 %{_bindir}/oprofiled
 %{_bindir}/opimport
+%{_bindir}/opjitconv
 %{_datadir}/%{name}
 %{_mandir}/man1/op*
 
@@ -116,3 +156,15 @@ rm -rf %{buildroot}
 %{_sbindir}/oprof_start
 %{_datadir}/applications/mandriva-*.desktop
 %{_iconsdir}/hicolor/*/apps/%{name}.png
+
+%files jit
+%defattr(-,root,root)
+%dir %{_libdir}/oprofile
+%{_libdir}/oprofile/libjvmti_oprofile.so
+%{_libdir}/oprofile/libopagent.so.*
+
+%files devel
+%defattr(-,root,root)
+%{_includedir}/opagent.h
+%{_libdir}/oprofile/libopagent.so
+
