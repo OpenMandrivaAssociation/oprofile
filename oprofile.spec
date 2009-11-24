@@ -1,5 +1,5 @@
 %define name	oprofile
-%define version	0.9.4
+%define version	0.9.6
 %define rel	1
 
 Summary:	Transparent low-overhead system-wide profiler
@@ -9,11 +9,7 @@ Release:	%mkrel %rel
 Group:		Development/Other
 License:	GPL
 URL:		http://oprofile.sourceforge.net/
-Source:		http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
-# upstream cvs, fixes build
-Patch0:		oprofile-mode-argument.patch
-# fedora, fixes build
-Patch1:		oprofile-basename.patch
+Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
 Patch2:		oprofile-agents-ldflags.patch
 Source11:	%name-16.png
@@ -73,8 +69,6 @@ compiling additional OProfile JIT agents.
 
 %prep
 %setup -q
-%patch0 -p0
-%patch1 -p1
 %patch2 -p1
 
 %build
@@ -83,8 +77,9 @@ export QTLIB=%{qt3lib}
 # fixes build
 touch NEWS AUTHORS # strange, autoreconf does not create these
 autoreconf -if
-%configure2_5x --with-kernel-support --with-qt-libraries=%{qt3lib} \
-	--with-java=%{java_home}
+%configure2_5x	--with-kernel-support \
+		--with-qt-libraries=%{qt3lib} \
+		--with-java=%{java_home}
 %make
 
 %install
