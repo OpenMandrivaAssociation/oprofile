@@ -1,6 +1,6 @@
 %define name	oprofile
 %define version	0.9.6
-%define rel	1
+%define rel	2
 
 Summary:	Transparent low-overhead system-wide profiler
 Name:		%name
