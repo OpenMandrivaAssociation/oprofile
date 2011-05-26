@@ -12,6 +12,7 @@ URL:		http://oprofile.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
 Patch2:		oprofile-agents-ldflags.patch
+Patch3:         oprofile-mutable-fix.patch
 Source11:	%name-16.png
 Source12:	%name-32.png
 Source13:	%name-48.png
@@ -70,6 +71,7 @@ compiling additional OProfile JIT agents.
 %prep
 %setup -q
 %patch2 -p1
+%parch3 -p1
 
 %build
 export QTDIR=%{qt3dir}
