@@ -1,24 +1,33 @@
-%define name	oprofile
-%define version	0.9.6
-%define rel	4
-
 Summary:	Transparent low-overhead system-wide profiler
-Name:		%name
-Version:	%version
-Release:	%mkrel %rel
+Name:		oprofile
+Version:	0.9.6
+Release:	%mkrel 5
 Group:		Development/Other
 License:	GPL
 URL:		http://oprofile.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
 Patch2:		oprofile-agents-ldflags.patch
-Patch3:         oprofile-mutable-fix.patch
+Patch10: oprofile-0.4-guess2.patch
+Patch63: oprofile-0.7-libs.patch
+Patch83: oprofile-0.9.5-xen.patch
+#Patch104: oprofile-jvmpi-lgpl.patch
+#Patch105: oprofile-0.9.5-timer.patch
+Patch106: oprofile-sect.patch
+Patch120: oprofile-iaperf.patch
+Patch121: oprofile-nehalem.patch
+Patch122: oprofile-amd.patch
+Patch123: oprofile-westmere.patch
+Patch124: oprofile-check.patch
+Patch130: oprofile-unmutable.patch
+Patch131: oprofile-qt4.patch
+Patch132: oprofile-opcontrol.patch
 Source11:	%name-16.png
 Source12:	%name-32.png
 Source13:	%name-48.png
-BuildRoot:	%{_tmppath}/%{name}-buildroot
-BuildRequires:	binutils-devel qt3-devel libpopt-devel gettext-devel
+BuildRequires:	binutils-devel qt4-devel libpopt-devel gettext-devel
 BuildRequires:	java-rpmbuild
+BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
 OProfile is a system-wide profiler for Linux systems, capable of
@@ -69,19 +78,31 @@ Header and development library symlink for libopagent, required for
 compiling additional OProfile JIT agents.
 
 %prep
+
 %setup -q
 %patch2 -p1
-%parch3 -p1
+%patch10 -p1 -b .guess2
+%patch63 -p1 -b .libs
+%patch83 -p1
+%patch106 -p1 -b .sect
+%patch120 -p1
+%patch121 -p1
+%patch122 -p1
+%patch123 -p1
+%patch124 -p1
+%patch130 -p1
+%patch131 -p1
+%patch132 -p1
 
 %build
-export QTDIR=%{qt3dir}
-export QTLIB=%{qt3lib}
 # fixes build
 touch NEWS AUTHORS # strange, autoreconf does not create these
 autoreconf -if
-%configure2_5x	--with-kernel-support \
-		--with-qt-libraries=%{qt3lib} \
-		--with-java=%{java_home}
+%configure2_5x \
+    --with-kernel-support \
+    --enable-gui=qt4 \
+    --with-java=%{java_home}
+
 %make
 
 %install
