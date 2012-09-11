@@ -1,33 +1,19 @@
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
-Version:	0.9.6
-Release:	%mkrel 5
+Version:	0.9.8
+Release:	%mkrel 1
 Group:		Development/Other
 License:	GPL
 URL:		http://oprofile.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
-Patch2:		oprofile-agents-ldflags.patch
-Patch10: oprofile-0.4-guess2.patch
-Patch63: oprofile-0.7-libs.patch
-Patch83: oprofile-0.9.5-xen.patch
-#Patch104: oprofile-jvmpi-lgpl.patch
-#Patch105: oprofile-0.9.5-timer.patch
-Patch106: oprofile-sect.patch
-Patch120: oprofile-iaperf.patch
-Patch121: oprofile-nehalem.patch
-Patch122: oprofile-amd.patch
-Patch123: oprofile-westmere.patch
-Patch124: oprofile-check.patch
-Patch130: oprofile-unmutable.patch
-Patch131: oprofile-qt4.patch
-Patch132: oprofile-opcontrol.patch
+Patch0:		oprofile-agents-ldflags.patch
+Patch1:		oprofile-0.4-guess2.patch
 Source11:	%name-16.png
 Source12:	%name-32.png
 Source13:	%name-48.png
-BuildRequires:	binutils-devel qt4-devel libpopt-devel gettext-devel
+BuildRequires:	binutils-devel qt4-devel pkgconfig(popt) gettext-devel
 BuildRequires:	java-rpmbuild
-BuildRoot:	%{_tmppath}/%{name}-buildroot
 
 %description
 OProfile is a system-wide profiler for Linux systems, capable of
@@ -80,23 +66,13 @@ compiling additional OProfile JIT agents.
 %prep
 
 %setup -q
-%patch2 -p1
-%patch10 -p1 -b .guess2
-%patch63 -p1 -b .libs
-%patch83 -p1
-%patch106 -p1 -b .sect
-%patch120 -p1
-%patch121 -p1
-%patch122 -p1
-%patch123 -p1
-%patch124 -p1
-%patch130 -p1
-%patch131 -p1
-%patch132 -p1
+%patch0 -p1
+%patch1 -p1 -b .guess2
 
 %build
 # fixes build
-touch NEWS AUTHORS # strange, autoreconf does not create these
+touch NEWS AUTHORS INSTALL ChangeLog # strange, autoreconf does not create these
+libtoolize --force
 autoreconf -if
 %configure2_5x \
     --with-kernel-support \
@@ -133,19 +109,6 @@ install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}
 
 rm %{buildroot}%{_libdir}/oprofile/*a
 
-%clean
-rm -rf %{buildroot}
-
-%if %mdkversion < 200900
-%post gui
-%{update_menus}
-%endif
-
-%if %mdkversion < 200900
-%postun gui
-%{clean_menus}
-%endif
-
 %pre jit
 %_pre_useradd oprofile "%{_var}/lib/oprofile" /bin/nologin
 
@@ -153,10 +116,11 @@ rm -rf %{buildroot}
 %_postun_userdel oprofile
 
 %files
-%defattr(-,root,root)
 %doc README TODO COPYING ChangeLog* doc/*.html
 %{_bindir}/opannotate
 %{_bindir}/oparchive
+%{_bindir}/op-check-perfevents
+%{_bindir}/operf
 %{_bindir}/opcontrol
 %{_bindir}/opgprof
 %{_bindir}/ophelp
@@ -168,7 +132,6 @@ rm -rf %{buildroot}
 %{_mandir}/man1/op*
 
 %files gui
-%defattr(-,root,root)
 %doc COPYING
 %{_bindir}/oprof_start
 %{_sbindir}/oprof_start
@@ -176,13 +139,11 @@ rm -rf %{buildroot}
 %{_iconsdir}/hicolor/*/apps/%{name}.png
 
 %files jit
-%defattr(-,root,root)
 %dir %{_libdir}/oprofile
 %{_libdir}/oprofile/libjvmti_oprofile.so
 %{_libdir}/oprofile/libopagent.so.*
 
 %files devel
-%defattr(-,root,root)
 %{_includedir}/opagent.h
 %{_libdir}/oprofile/libopagent.so
 
