@@ -9,6 +9,7 @@ Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
 Patch0:		oprofile-agents-ldflags.patch
 Patch1:		oprofile-0.4-guess2.patch
+Patch2:		oprofile-automake-1.13.patch
 Source11:	%name-16.png
 Source12:	%name-32.png
 Source13:	%name-48.png
@@ -68,6 +69,7 @@ compiling additional OProfile JIT agents.
 %setup -q
 %patch0 -p1
 %patch1 -p1 -b .guess2
+%patch2 -p1 -b .am113~
 
 %build
 # fixes build

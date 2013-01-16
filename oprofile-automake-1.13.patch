@@ -1,0 +1,11 @@
+--- oprofile-0.9.8/configure.ac.bero	2013-01-16 01:53:49.986432292 +0100
++++ oprofile-0.9.8/configure.ac	2013-01-16 01:53:55.927361353 +0100
+@@ -13,7 +13,7 @@ AC_PREREQ(2.13)
+ 
+ AC_INIT(libop/op_config.h)
+ AM_INIT_AUTOMAKE(oprofile, 0.9.8)
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS([config.h])
+ 
+ AC_CHECK_DECLS([basename], [], [], [[#include <libgen.h>]])
+ AC_PROG_RANLIB

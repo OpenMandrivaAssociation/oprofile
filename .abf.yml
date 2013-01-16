@@ -1,2 +1,5 @@
 sources:
-  "oprofile-0.9.8.tar.gz": 28416b853641f913e5f90954f2e3837efd96f6cd
+  oprofile-0.9.8.tar.gz: 28416b853641f913e5f90954f2e3837efd96f6cd
+  oprofile-16.png: 3b766bde23a60b89d3f595b326d52b5959691ca9
+  oprofile-32.png: a290b8d327f944010e408e4ff21e120a41735d5c
+  oprofile-48.png: 16fb3a7d79357973eda909bdd08b2893f85e17e1
