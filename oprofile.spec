@@ -1,20 +1,23 @@
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
 Version:	0.9.8
-Release:	%mkrel 1
+Release:	1
 Group:		Development/Other
-License:	GPL
-URL:		http://oprofile.sourceforge.net/
-Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
+License:	GPLv2
+Url:		http://oprofile.sourceforge.net/
+Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source11:	%{name}-16.png
+Source12:	%{name}-32.png
+Source13:	%{name}-48.png
 # Use -module -avoid-version for agents:
 Patch0:		oprofile-agents-ldflags.patch
 Patch1:		oprofile-0.4-guess2.patch
 Patch2:		oprofile-automake-1.13.patch
-Source11:	%name-16.png
-Source12:	%name-32.png
-Source13:	%name-48.png
-BuildRequires:	binutils-devel qt4-devel pkgconfig(popt) gettext-devel
 BuildRequires:	java-rpmbuild
+BuildRequires:	binutils-devel
+BuildRequires:	gettext-devel
+BuildRequires:	qt4-devel
+BuildRequires:	pkgconfig(popt)
 
 %description
 OProfile is a system-wide profiler for Linux systems, capable of
@@ -34,14 +37,11 @@ the kernel, shared libraries, and applications.
 %package	gui
 Summary:	GUI for starting the OProfile profiler
 Group:		Development/Other
-Requires:	usermode usermode-consoleonly
+Requires:	usermode
+Requires:	usermode-consoleonly
 Requires:	%{name} = %{version}
 
 %description gui
-OProfile is a system-wide profiler for Linux systems, capable of
-profiling all running code at low overhead. OProfile is released
-under the GNU GPL. 
-
 This package provides a convenient QT GUI for starting the
 profiler.
 
@@ -65,26 +65,22 @@ Header and development library symlink for libopagent, required for
 compiling additional OProfile JIT agents.
 
 %prep
-
 %setup -q
-%patch0 -p1
-%patch1 -p1 -b .guess2
-%patch2 -p1 -b .am113~
+%apply_patches
 
-%build
 # fixes build
 touch NEWS AUTHORS INSTALL ChangeLog # strange, autoreconf does not create these
-libtoolize --force
 autoreconf -if
+
+%build
 %configure2_5x \
-    --with-kernel-support \
-    --enable-gui=qt4 \
-    --with-java=%{java_home}
+	--with-kernel-support \
+	--enable-gui=qt4 \
+	--with-java=%{java_home}
 
 %make
 
 %install
-rm -rf %{buildroot}
 %makeinstall_std
 rm -f %{buildroot}%{_datadir}/doc/%{name}/*.html
 
