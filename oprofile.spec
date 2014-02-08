@@ -1,7 +1,7 @@
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
 Version:	0.9.8
-Release:	%mkrel 1
+Release:	2
 Group:		Development/Other
 License:	GPL
 URL:		http://oprofile.sourceforge.net/
