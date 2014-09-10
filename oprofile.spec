@@ -123,7 +123,10 @@ touch NEWS AUTHORS INSTALL ChangeLog # strange, autoreconf does not create these
 autoreconf -if
 
 %build
-%configure2_5x \
+# need to backport clang patches
+export CC=gcc
+export CXX=g++
+%configure \
 	--with-kernel-support \
 	--enable-gui=qt4 \
 	--with-java=%{java_home}
