@@ -16,6 +16,7 @@ Patch2:		oprofile-004-configure-error-message-missing-libpfm.patch
 Patch3:		oprofile-005-enable-ppc64le-arch.patch
 Patch4:		oprofile-006-tidy-powerpc64-bfd-target-check.patch
 BuildRequires:	java-rpmbuild
+BuildRequires:	java-devel
 BuildRequires:	binutils-devel
 BuildRequires:	gettext-devel
 BuildRequires:	qt4-devel
