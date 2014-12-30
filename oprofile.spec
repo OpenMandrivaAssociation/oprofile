@@ -1,7 +1,7 @@
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
 Version:	0.9.9
-Release:	3
+Release:	4
 License:	GPLv2+
 Group:		Development/Other
 Url:		http://oprofile.sourceforge.net/
@@ -15,7 +15,7 @@ Patch1:		oprofile-0.4-guess2.patch
 Patch2:		oprofile-004-configure-error-message-missing-libpfm.patch
 Patch3:		oprofile-005-enable-ppc64le-arch.patch
 Patch4:		oprofile-006-tidy-powerpc64-bfd-target-check.patch
-BuildRequires:	java-rpmbuild
+BuildRequires:	jpackage-utils
 BuildRequires:	java-devel
 BuildRequires:	binutils-devel
 BuildRequires:	gettext-devel
