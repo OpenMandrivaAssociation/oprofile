@@ -3,20 +3,15 @@
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
 Version:	1.1.0
-Release:	1
+Release:	2
 License:	GPLv2+
 Group:		Development/Other
 Url:		http://oprofile.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Patch0:		oprofile-verbose.patch
 Source11:	%{name}-16.png
 Source12:	%{name}-32.png
 Source13:	%{name}-48.png
-# Use -module -avoid-version for agents:
-#Patch0:		oprofile-agents-ldflags.patch
-#Patch1:		oprofile-0.4-guess2.patch
-#Patch2:		oprofile-004-configure-error-message-missing-libpfm.patch
-#Patch3:		oprofile-005-enable-ppc64le-arch.patch
-#Patch4:		oprofile-006-tidy-powerpc64-bfd-target-check.patch
 BuildRequires:	jpackage-utils
 BuildRequires:	java-devel
 BuildRequires:	binutils-devel
@@ -106,9 +101,8 @@ compiling additional OProfile JIT agents.
 #autoreconf -if
 
 %build
-# need to backport clang patches
-#export CC=gcc
-#export CXX=g++
+CXXFLAGS="%{optflags}"
+CFLAGS="%{optflags}"
 %configure \
 	--with-java=%{java_home}
 
