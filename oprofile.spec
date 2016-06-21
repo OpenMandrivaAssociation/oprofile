@@ -1,26 +1,28 @@
+%define _disable_rebuild_configure 1
+
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
-Version:	0.9.9
-Release:	6
+Version:	1.1.0
+Release:	1
 License:	GPLv2+
 Group:		Development/Other
 Url:		http://oprofile.sourceforge.net/
-Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.bz2
+Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source11:	%{name}-16.png
 Source12:	%{name}-32.png
 Source13:	%{name}-48.png
 # Use -module -avoid-version for agents:
-Patch0:		oprofile-agents-ldflags.patch
-Patch1:		oprofile-0.4-guess2.patch
-Patch2:		oprofile-004-configure-error-message-missing-libpfm.patch
-Patch3:		oprofile-005-enable-ppc64le-arch.patch
-Patch4:		oprofile-006-tidy-powerpc64-bfd-target-check.patch
+#Patch0:		oprofile-agents-ldflags.patch
+#Patch1:		oprofile-0.4-guess2.patch
+#Patch2:		oprofile-004-configure-error-message-missing-libpfm.patch
+#Patch3:		oprofile-005-enable-ppc64le-arch.patch
+#Patch4:		oprofile-006-tidy-powerpc64-bfd-target-check.patch
 BuildRequires:	jpackage-utils
 BuildRequires:	java-devel
 BuildRequires:	binutils-devel
 BuildRequires:	gettext-devel
-BuildRequires:	qt4-devel
 BuildRequires:	pkgconfig(popt)
+Obsoletes:	oprofile-gui < %{version}-%{release}
 
 %description
 OProfile is a system-wide profiler for Linux systems, capable of
@@ -44,36 +46,14 @@ the kernel, shared libraries, and applications.
 %{_bindir}/oparchive
 %{_bindir}/op-check-perfevents
 %{_bindir}/operf
-%{_bindir}/opcontrol
 %{_bindir}/opgprof
 %{_bindir}/ophelp
 %{_bindir}/opreport
-%{_bindir}/oprofiled
 %{_bindir}/opimport
 %{_bindir}/opjitconv
 %{_datadir}/%{name}
 %{_mandir}/man1/ocount.1*
 %{_mandir}/man1/op*
-
-#----------------------------------------------------------------------------
-
-%package gui
-Summary:	GUI for starting the OProfile profiler
-Group:		Development/Other
-Requires:	usermode
-Requires:	usermode-consoleonly
-Requires:	%{name} = %{EVRD}
-
-%description gui
-This package provides a convenient Qt GUI for starting the
-profiler.
-
-%files gui
-%doc COPYING
-%{_bindir}/oprof_start
-%{_sbindir}/oprof_start
-%{_datadir}/applications/*.desktop
-%{_iconsdir}/hicolor/*/apps/%{name}.png
 
 #----------------------------------------------------------------------------
 
@@ -89,7 +69,7 @@ into the JVM as per the OProfile documentation.
 
 %files jit
 %dir %{_libdir}/oprofile
-%{_libdir}/oprofile/libjvmti_oprofile.so
+%{_libdir}/oprofile/libjvmti_oprofile.so.*
 %{_libdir}/oprofile/libopagent.so.*
 
 %pre jit
@@ -112,24 +92,24 @@ compiling additional OProfile JIT agents.
 %files devel
 %{_includedir}/opagent.h
 %{_libdir}/oprofile/libopagent.so
+%{_libdir}/oprofile/libjvmti_oprofile.so
 
 #----------------------------------------------------------------------------
+
 
 %prep
 %setup -q
 %apply_patches
 
 # fixes build
-touch NEWS AUTHORS INSTALL ChangeLog # strange, autoreconf does not create these
-autoreconf -if
+#touch NEWS AUTHORS INSTALL ChangeLog # strange, autoreconf does not create these
+#autoreconf -if
 
 %build
 # need to backport clang patches
-export CC=gcc
-export CXX=g++
+#export CC=gcc
+#export CXX=g++
 %configure \
-	--with-kernel-support \
-	--enable-gui=qt4 \
 	--with-java=%{java_home}
 
 %make
@@ -137,27 +117,6 @@ export CXX=g++
 %install
 %makeinstall_std
 rm -f %{buildroot}%{_datadir}/doc/%{name}/*.html
-
-# root dialog
-install -d -m755 %{buildroot}%{_sbindir}
-mv %{buildroot}%{_bindir}/oprof_start %{buildroot}%{_sbindir}/oprof_start
-ln -s consolehelper %{buildroot}%{_bindir}/oprof_start
-
-install -d -m755 %{buildroot}%{_datadir}/applications
-cat > %{buildroot}%{_datadir}/applications/%{name}.desktop <<EOF
-[Desktop Entry]
-Name=OProfile starter
-Comment=Start OProfile profiler
-Exec=%{_bindir}/oprof_start
-Icon=%{name}
-Terminal=false
-Type=Application
-Categories=Development;Profiling;Qt;
-EOF
-
-install -m644 %{SOURCE11} -D %{buildroot}%{_iconsdir}/hicolor/16x16/apps/%{name}.png
-install -m644 %{SOURCE12} -D %{buildroot}%{_iconsdir}/hicolor/32x32/apps/%{name}.png
-install -m644 %{SOURCE13} -D %{buildroot}%{_iconsdir}/hicolor/48x48/apps/%{name}.png
 
 rm %{buildroot}%{_libdir}/oprofile/*a
 
