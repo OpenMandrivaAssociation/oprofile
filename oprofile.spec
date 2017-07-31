@@ -1,23 +1,43 @@
+<<<<<<< HEAD
 %define _disable_rebuild_configure 1
 
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
 Version:	1.1.0
 Release:	3
+=======
+%bcond_with java
+
+Summary:	Transparent low-overhead system-wide profiler
+Name:		oprofile
+Version:	1.2.0
+Release:	1
+>>>>>>> 3.0
 License:	GPLv2+
 Group:		Development/Other
 Url:		http://oprofile.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+<<<<<<< HEAD
 Patch0:		oprofile-verbose.patch
 Source11:	%{name}-16.png
 Source12:	%{name}-32.png
 Source13:	%{name}-48.png
+=======
+# Use -module -avoid-version for agents:
+Patch0:		oprofile-agents-ldflags.patch
+%if %{with java}
+>>>>>>> 3.0
 BuildRequires:	jpackage-utils
 BuildRequires:	java-devel
+%endif
 BuildRequires:	binutils-devel
 BuildRequires:	gettext-devel
 BuildRequires:	pkgconfig(popt)
+<<<<<<< HEAD
 Obsoletes:	oprofile-gui < %{version}-%{release}
+=======
+Obsoletes:	oprofile-gui  <= %{version}-%{release}
+>>>>>>> 3.0
 
 %description
 OProfile is a system-wide profiler for Linux systems, capable of
@@ -50,8 +70,11 @@ the kernel, shared libraries, and applications.
 %{_mandir}/man1/ocount.1*
 %{_mandir}/man1/op*
 
+<<<<<<< HEAD
 #----------------------------------------------------------------------------
 
+=======
+>>>>>>> 3.0
 %package jit
 Summary:	Libraries for profiling Java and other JIT compiled code
 Group:		Development/Other
@@ -64,7 +87,13 @@ into the JVM as per the OProfile documentation.
 
 %files jit
 %dir %{_libdir}/oprofile
+<<<<<<< HEAD
 %{_libdir}/oprofile/libjvmti_oprofile.so.*
+=======
+%if %{with java}
+%{_libdir}/oprofile/libjvmti_oprofile.so
+%endif
+>>>>>>> 3.0
 %{_libdir}/oprofile/libopagent.so.*
 
 %pre jit
@@ -72,7 +101,6 @@ into the JVM as per the OProfile documentation.
 
 %postun jit
 %_postun_userdel oprofile
-
 #----------------------------------------------------------------------------
 
 %package devel
@@ -104,7 +132,13 @@ compiling additional OProfile JIT agents.
 CXXFLAGS="%{optflags}"
 CFLAGS="%{optflags}"
 %configure \
+<<<<<<< HEAD
+=======
+	--with-kernel-support \
+%if %{with java}
+>>>>>>> 3.0
 	--with-java=%{java_home}
+%endif
 
 %make
 
@@ -112,5 +146,10 @@ CFLAGS="%{optflags}"
 %makeinstall_std
 rm -f %{buildroot}%{_datadir}/doc/%{name}/*.html
 
+<<<<<<< HEAD
+=======
+# root dialog
+install -d -m755 %{buildroot}%{_sbindir}
+>>>>>>> 3.0
 rm %{buildroot}%{_libdir}/oprofile/*a
 
