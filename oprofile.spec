@@ -1,43 +1,22 @@
-<<<<<<< HEAD
-%define _disable_rebuild_configure 1
-
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
-Version:	1.1.0
-Release:	4
-=======
-%bcond_with java
-
-Summary:	Transparent low-overhead system-wide profiler
-Name:		oprofile
-Version:	1.2.0
-Release:	2
->>>>>>> 3.0
-License:	GPLv2+
+Version:	1.3.0
+Release:	1
 Group:		Development/Other
-Url:		http://oprofile.sourceforge.net/
-Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-<<<<<<< HEAD
-Patch0:		oprofile-verbose.patch
-Source11:	%{name}-16.png
-Source12:	%{name}-32.png
-Source13:	%{name}-48.png
-=======
+License:	GPLv2+
+URL:		http://oprofile.sourceforge.net/
+Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
 Patch0:		oprofile-agents-ldflags.patch
-%if %{with java}
->>>>>>> 3.0
-BuildRequires:	jpackage-utils
-BuildRequires:	java-devel
-%endif
 BuildRequires:	binutils-devel
-BuildRequires:	gettext-devel
 BuildRequires:	pkgconfig(popt)
-<<<<<<< HEAD
-Obsoletes:	oprofile-gui < %{version}-%{release}
-=======
-Obsoletes:	oprofile-gui  <= %{version}-%{release}
->>>>>>> 3.0
+BuildRequires:	gettext-devel
+%ifnarch %arm %mips
+BuildRequires:	java-devel
+BuildRequires:	javapackages-tools
+%endif
+
+Obsoletes:	oprofile-gui < 0.9.9-5
 
 %description
 OProfile is a system-wide profiler for Linux systems, capable of
@@ -54,102 +33,71 @@ can also be used for basic time-spent profiling. All code is
 profiled: hardware and software interrupt handlers, kernel modules,
 the kernel, shared libraries, and applications.
 
-%files
-%doc README TODO COPYING ChangeLog* doc/*.html
-%{_bindir}/ocount
-%{_bindir}/opannotate
-%{_bindir}/oparchive
-%{_bindir}/op-check-perfevents
-%{_bindir}/operf
-%{_bindir}/opgprof
-%{_bindir}/ophelp
-%{_bindir}/opreport
-%{_bindir}/opimport
-%{_bindir}/opjitconv
-%{_datadir}/%{name}
-%{_mandir}/man1/ocount.1*
-%{_mandir}/man1/op*
-
-<<<<<<< HEAD
-#----------------------------------------------------------------------------
-
-=======
->>>>>>> 3.0
-%package jit
+%package	jit
 Summary:	Libraries for profiling Java and other JIT compiled code
 Group:		Development/Other
 
-%description jit
+%description	jit
 Libraries needed for profiling Java and other JIT compiled code.
 For profiling Java code, you need to load
 %{_libdir}/oprofile/libjvmti_oprofile.so
 into the JVM as per the OProfile documentation.
 
-%files jit
-%dir %{_libdir}/oprofile
-<<<<<<< HEAD
-%{_libdir}/oprofile/libjvmti_oprofile.so.*
-=======
-%if %{with java}
-%{_libdir}/oprofile/libjvmti_oprofile.so
-%endif
->>>>>>> 3.0
-%{_libdir}/oprofile/libopagent.so.*
+%package	devel
+Summary:	Development files for developing OProfile JIT agents
+Group:		Development/Other
+Requires:	%{name}-jit = %{version}
+
+%description	devel
+Header and development library symlink for libopagent, required for
+compiling additional OProfile JIT agents.
+
+%prep
+%setup -q
+%autopatch -p1
+
+%build
+./autogen.sh
+
+%configure	\
+		--with-java=%{_prefix}/lib/jvm/java
+%make_build
+
+%install
+%make_install
+
+rm -f %{buildroot}%{_datadir}/doc/%{name}/*.html
+
+rm %{buildroot}%{_libdir}/oprofile/*a
 
 %pre jit
 %_pre_useradd oprofile "%{_var}/lib/oprofile" /bin/nologin
 
 %postun jit
 %_postun_userdel oprofile
-#----------------------------------------------------------------------------
 
-%package devel
-Summary:	Development files for developing OProfile JIT agents
-Group:		Development/Other
-Requires:	%{name}-jit = %{EVRD}
+%files
+%doc README TODO COPYING ChangeLog* doc/*.html doc/*.xsd
+%{_bindir}/ocount
+%{_bindir}/op-check-perfevents
+%{_bindir}/opannotate
+%{_bindir}/oparchive
+%{_bindir}/operf
+%{_bindir}/opgprof
+%{_bindir}/ophelp
+%{_bindir}/opreport
+%{_bindir}/opimport
+%{_bindir}/opjitconv
+%{_datadir}/%{name}/
+%{_mandir}/man1/o*.1*
 
-%description devel
-Header and development library symlink for libopagent, required for
-compiling additional OProfile JIT agents.
+%files jit
+%dir %{_libdir}/oprofile
+%ifnarch %arm %mips
+%{_libdir}/oprofile/libjvmti_oprofile.so
+%endif
+%{_libdir}/oprofile/libopagent.so.*
 
 %files devel
 %{_includedir}/opagent.h
 %{_libdir}/oprofile/libopagent.so
-%{_libdir}/oprofile/libjvmti_oprofile.so
-
-#----------------------------------------------------------------------------
-
-
-%prep
-%setup -q
-%apply_patches
-
-# fixes build
-#touch NEWS AUTHORS INSTALL ChangeLog # strange, autoreconf does not create these
-#autoreconf -if
-
-%build
-CXXFLAGS="%{optflags}"
-CFLAGS="%{optflags}"
-%configure \
-<<<<<<< HEAD
-=======
-	--with-kernel-support \
-%if %{with java}
->>>>>>> 3.0
-	--with-java=%{java_home}
-%endif
-
-%make
-
-%install
-%makeinstall_std
-rm -f %{buildroot}%{_datadir}/doc/%{name}/*.html
-
-<<<<<<< HEAD
-=======
-# root dialog
-install -d -m755 %{buildroot}%{_sbindir}
->>>>>>> 3.0
-rm %{buildroot}%{_libdir}/oprofile/*a
-
