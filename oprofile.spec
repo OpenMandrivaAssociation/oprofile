@@ -1,3 +1,7 @@
+=====================================
+THIS IS DEAD PACKAGE REPLACED BY PERF
+=====================================
+
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
 Version:	1.3.0
