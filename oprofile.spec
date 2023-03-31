@@ -5,7 +5,7 @@ THIS IS DEAD PACKAGE REPLACED BY PERF
 Summary:	Transparent low-overhead system-wide profiler
 Name:		oprofile
 Version:	1.3.0
-Release:	2
+Release:	3
 Group:		Development/Other
 License:	GPLv2+
 URL:		http://oprofile.sourceforge.net/
