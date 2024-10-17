@@ -8,7 +8,7 @@ Version:	1.3.0
 Release:	3
 Group:		Development/Other
 License:	GPLv2+
-URL:		http://oprofile.sourceforge.net/
+URL:		https://oprofile.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
 Patch0:		oprofile-agents-ldflags.patch
