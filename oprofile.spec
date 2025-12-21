@@ -12,6 +12,11 @@ URL:		https://oprofile.sourceforge.net/
 Source0:	http://prdownloads.sourceforge.net/%name/%name-%version.tar.gz
 # Use -module -avoid-version for agents:
 Patch0:		oprofile-agents-ldflags.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	binutils-devel
 BuildRequires:	pkgconfig(popt)
 BuildRequires:	gettext-devel
